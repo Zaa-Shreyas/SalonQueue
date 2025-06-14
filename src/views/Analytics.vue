@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-tertiary-600 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
@@ -8,7 +8,7 @@
 
       <!-- Key Metrics -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-400 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -35,12 +35,12 @@
             </div>
             <div class="ml-4">
               <p class="text-sm font-medium text-gray-500">Revenue Today</p>
-              <p class="text-2xl font-semibold text-gray-900">${{ todayRevenue }}</p>
+              <p class="text-2xl font-semibold text-gray-900">₹{{ todayRevenue }}</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-400 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -76,13 +76,13 @@
       <!-- Charts -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Daily Customers Chart -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-400 rounded-lg shadow p-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">Daily Customer Volume</h2>
           <canvas ref="dailyChart" width="400" height="200"></canvas>
         </div>
 
         <!-- Hourly Distribution Chart -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-100 rounded-lg shadow p-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">Hourly Distribution</h2>
           <canvas ref="hourlyChart" width="400" height="200"></canvas>
         </div>
@@ -91,7 +91,7 @@
       <!-- Service Popularity and Wait Times -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Service Popularity -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-400 rounded-lg shadow p-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">Service Popularity</h2>
           <div class="space-y-4">
             <div 
@@ -116,14 +116,14 @@
         </div>
 
         <!-- Wait Time Analysis -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-tertiary-100 rounded-lg shadow p-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">Wait Time Analysis</h2>
           <canvas ref="waitTimeChart" width="400" height="200"></canvas>
         </div>
       </div>
 
       <!-- Recent Activity -->
-      <div class="mt-8 bg-white rounded-lg shadow">
+      <div class="mt-8 bg-tertiary-400 rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
           <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
         </div>
@@ -278,7 +278,7 @@ const createDailyChart = () => {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      aspectRatio: 2,
       plugins: {
         legend: {
           display: false
@@ -309,7 +309,7 @@ const createHourlyChart = () => {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      aspectRatio: 2,
       plugins: {
         legend: {
           display: false
@@ -340,7 +340,7 @@ const createWaitTimeChart = () => {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      aspectRatio: 2,
       plugins: {
         legend: {
           position: 'bottom'
@@ -353,7 +353,9 @@ const createWaitTimeChart = () => {
 onMounted(async () => {
   await nextTick()
   createDailyChart()
+  await nextTick()
   createHourlyChart()
+  await nextTick()
   createWaitTimeChart()
 })
 </script>

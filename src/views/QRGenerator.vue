@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 py-8">
+  <div class="min-h-screen bg-gradient-to-br from-purple-300 to-purple-200 py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-4">QR Code Management</h1>
@@ -8,7 +8,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- QR Code Generator -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-violet-300 rounded-lg shadow p-6">
           <h2 class="text-xl font-semibold text-gray-900 mb-4">Generate QR Code</h2>
           
           <div class="space-y-4">
@@ -18,7 +18,7 @@
               </label>
               <select 
                 v-model="selectedType" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                class="w-full px-3 py-2 border border-gray-300 bg-rose-100 rounded-md focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="registration">Customer Registration</option>
                 <option value="status">Queue Status Check</option>
@@ -32,7 +32,7 @@
               </label>
               <select 
                 v-model="preSelectedService"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                class="w-full px-3 py-2 border border-gray-300 bg-rose-100 rounded-md focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">No pre-selection</option>
                 <option v-for="service in services" :key="service.id" :value="service.name">
@@ -49,7 +49,7 @@
                 v-model="customMessage"
                 type="text"
                 placeholder="e.g., Scan to join our queue!"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                class="w-full px-3 py-2 border border-gray-300 bg-rose-100 rounded-md focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
@@ -63,7 +63,7 @@
         </div>
 
         <!-- QR Code Display -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-violet-300 rounded-lg shadow p-6">
           <h2 class="text-xl font-semibold text-gray-900 mb-4">Generated QR Code</h2>
           
           <div v-if="currentQR" class="text-center">
@@ -102,7 +102,7 @@
       </div>
 
       <!-- QR Scanner Section -->
-      <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <div class="mt-8 bg-violet-300 rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">QR Code Scanner</h2>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -186,14 +186,14 @@
       </div>
 
       <!-- Recent QR Codes -->
-      <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <div class="mt-8 bg-violet-300 rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent QR Codes</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div 
             v-for="qr in recentQRs" 
             :key="qr.id"
-            class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors cursor-pointer"
+            class="border border-gray-200 bg-rose-200 rounded-lg p-4 hover:border-primary-300 transition-colors cursor-pointer"
             @click="selectQR(qr)"
           >
             <div class="text-center mb-3">

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50">
+  <div class="min-h-screen bg-gradient-to-br from-tertiary-600 to-tertiary-400">
     <!-- Hero Section -->
     <section class="pt-20 pb-32">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,19 +16,20 @@
           </p>
           
           <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
-            <router-link to="/register" class="btn-primary text-lg">
-              Join Queue Now
-            </router-link>
-            <button @click="scanQR" class="btn-secondary text-lg">
-              Scan QR Code
-            </button>
+            <router-link to="/register" class="bg-primary-600 text-white hover:bg-accent-600 btn-primary text-lg">
+  Join Queue Now
+</router-link>
+<button @click="scanQR" class="bg-accent-600 text-white hover:bg-primary-600 btn-secondary text-lg">
+  Scan QR Code
+</button>
+
           </div>
         </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-gradient-to-br from-tertiary-600 to-tertiary-400">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-16">
           Why Choose SalonQueue?
@@ -36,7 +37,7 @@
         
         <div class="grid md:grid-cols-3 gap-8">
           <div class="text-center p-6 rounded-xl hover:shadow-lg transition-shadow">
-            <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-tertiary-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -48,7 +49,7 @@
           </div>
 
           <div class="text-center p-6 rounded-xl hover:shadow-lg transition-shadow">
-            <div class="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-tertiary-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v2H8V5z" />
@@ -61,8 +62,8 @@
           </div>
 
           <div class="text-center p-6 rounded-xl hover:shadow-lg transition-shadow">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-16 h-16 bg-tertiary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-tertiary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
@@ -77,30 +78,30 @@
     </section>
 
     <!-- Live Queue Stats -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gradient-to-br from-tertiary-600 to-tertiary-400">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-16">
           Live Queue Status
         </h2>
         
         <div class="grid md:grid-cols-4 gap-6">
-          <div class="bg-white rounded-xl p-6 text-center shadow-lg">
-            <div class="text-3xl font-bold text-yellow-600 mb-2">{{ queueStore.waitingCount }}</div>
+          <div class="bg-tertiary-100 rounded-xl p-6 text-center shadow-lg">
+            <div class="text-3xl font-bold text-primary-600 mb-2">{{ queueStore.waitingCount }}</div>
             <div class="text-gray-600">Waiting</div>
           </div>
           
-          <div class="bg-white rounded-xl p-6 text-center shadow-lg">
-            <div class="text-3xl font-bold text-blue-600 mb-2">{{ queueStore.inProgressCount }}</div>
+          <div class="bg-tertiary-100 rounded-xl p-6 text-center shadow-lg">
+            <div class="text-3xl font-bold text-accent-600 mb-2">{{ queueStore.inProgressCount }}</div>
             <div class="text-gray-600">In Progress</div>
           </div>
           
-          <div class="bg-white rounded-xl p-6 text-center shadow-lg">
-            <div class="text-3xl font-bold text-green-600 mb-2">{{ queueStore.completedCount }}</div>
+          <div class="bg-tertiary-100 rounded-xl p-6 text-center shadow-lg">
+            <div class="text-3xl font-bold text-tertiary-600 mb-2">{{ queueStore.completedCount }}</div>
             <div class="text-gray-600">Completed Today</div>
           </div>
           
-          <div class="bg-white rounded-xl p-6 text-center shadow-lg">
-            <div class="text-3xl font-bold text-purple-600 mb-2">{{ queueStore.averageWaitTime }}m</div>
+          <div class="bg-tertiary-100 rounded-xl p-6 text-center shadow-lg">
+            <div class="text-3xl font-bold text-highlight-600 mb-2">{{ queueStore.averageWaitTime }}m</div>
             <div class="text-gray-600">Avg Wait Time</div>
           </div>
         </div>
@@ -108,9 +109,9 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+    <section class="py-20 bg-gradient-to-br from-tertiary-600 to-tertiary-400">
       <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-white mb-6">
+        <h2 class="text-3xl font-bold text-primary-700 mb-6">
           Ready to Transform Your Salon Experience?
         </h2>
         <p class="text-xl text-primary-100 mb-8">
@@ -118,10 +119,10 @@
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <router-link to="/register" class="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors">
+          <router-link to="/register" class="bg-primary-700 text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors">
             Get Started Now
           </router-link>
-          <router-link to="/staff" class="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-medium py-3 px-8 rounded-lg transition-colors">
+          <router-link to="/staff" class="border-2 border-primary-700 text-primary-700 hover:bg-primary-700 hover:text-primary-600 font-medium py-3 px-8 rounded-lg transition-colors">
             Staff Login
           </router-link>
         </div>

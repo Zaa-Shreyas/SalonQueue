@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-primary-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Staff Dashboard</h1>
@@ -8,7 +8,7 @@
 
       <!-- Stats Overview -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-accent-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-accent-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-accent-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-accent-100 rounded-lg shadow p-6">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -76,7 +76,7 @@
       <!-- Queue Management -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Waiting Queue -->
-        <div class="bg-white rounded-lg shadow">
+        <div class="bg-accent-100 rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">Waiting Queue</h2>
           </div>
@@ -85,7 +85,7 @@
               <div 
                 v-for="customer in waitingCustomers" 
                 :key="customer.id"
-                class="p-4 border border-gray-200 rounded-lg hover:border-primary-300 transition-colors"
+                class="p-4 border border-gray-200 bg-primary-100 rounded-lg hover:border-primary-300 transition-colors"
               >
                 <div class="flex justify-between items-start mb-2">
                   <div>
@@ -111,7 +111,7 @@
                   </button>
                   <button 
                     @click="removeCustomer(customer)"
-                    class="px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                    class="px-3 py-2 bg-red-500 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
                   >
                     Remove
                   </button>
@@ -126,7 +126,7 @@
         </div>
 
         <!-- In Progress -->
-        <div class="bg-white rounded-lg shadow">
+        <div class="bg-accent-100 rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">In Progress</h2>
           </div>
@@ -135,7 +135,7 @@
               <div 
                 v-for="customer in inProgressCustomers" 
                 :key="customer.id"
-                class="p-4 border border-blue-200 bg-blue-50 rounded-lg"
+                class="p-4 border border-blue-200 bg-primary-100 rounded-lg"
               >
                 <div class="flex justify-between items-start mb-2">
                   <div>
@@ -173,7 +173,7 @@
         </div>
 
         <!-- Recently Completed -->
-        <div class="bg-white rounded-lg shadow">
+        <div class="bg-accent-100 rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">Recently Completed</h2>
           </div>
@@ -209,7 +209,7 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <div class="mt-8 bg-accent-100 rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
         <div class="flex flex-wrap gap-4">
           <button 

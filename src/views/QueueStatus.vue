@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 py-8">
+  <div class="min-h-screen bg-gradient-to-br from-primary-100 to-accent-50 py-8">
     <div class="max-w-4xl mx-auto px-4">
       <!-- Customer Info Card -->
       <div class="card mb-8 animate-slide-up">

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 py-12">
+  <div class="min-h-screen bg-gradient-to-br from-primary-700 to-accent-400 py-12">
     <div class="max-w-md mx-auto px-4">
       <div class="card animate-slide-up">
         <div class="text-center mb-8">
@@ -37,7 +37,7 @@
               type="tel"
               required
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-              placeholder="+1 (555) 123-4567"
+              placeholder="+91-xxx-xxx-xxxx"
             />
           </div>
 
@@ -53,12 +53,12 @@
             >
               <option value="">Select a service</option>
               <option v-for="service in queueStore.services" :key="service.id" :value="service.name">
-                {{ service.name }} - {{ service.duration }}min - ${{ service.price }}
+                {{ service.name }} - {{ service.duration }}min - ₹{{ service.price }}
               </option>
             </select>
           </div>
 
-          <div class="bg-primary-50 p-4 rounded-lg">
+          <div class="bg-gray-200 p-4 rounded-lg">
             <div class="flex items-center justify-between text-sm">
               <span class="text-gray-600">Current wait time:</span>
               <span class="font-semibold text-primary-600">{{ estimatedWait }} minutes</span>

@@ -306,6 +306,9 @@ const formatTime = (dateString?: string) => {
 const startService = async (customer: any) => {
   try {
     await queueStore.updateCustomerStatus(customer.id, 'in-progress')
+    await queueStore.fetchCustomers()
+    queueStore.customers = await queueStore.fetchCustomers() // Update the customers array
+    inProgressCustomers.value = queueStore.customers.filter(c => c.status === 'in-progress')
     playNotification()
   } catch (error) {
     console.error('Error starting service:', error)
@@ -314,11 +317,15 @@ const startService = async (customer: any) => {
 
 const completeService = async (customer: any) => {
   try {
-    const actualWait = customer.started_at ? 
+    const actualWait = customer.started_at ?
       Math.round((new Date().getTime() - new Date(customer.started_at).getTime()) / (1000 * 60)) :
       customer.estimated_wait
 
     await queueStore.updateCustomerStatus(customer.id, 'completed')
+    await queueStore.fetchCustomers()
+    queueStore.customers = await queueStore.fetchCustomers() // Update the customers array
+    inProgressCustomers.value = queueStore.customers.filter(c => c.status === 'in-progress')
+    recentlyCompleted.value = queueStore.customers.filter(c => c.status === 'completed').sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime()).slice(0, 5)
     playNotification()
   } catch (error) {
     console.error('Error completing service:', error)

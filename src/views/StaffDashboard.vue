@@ -4,6 +4,7 @@
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Staff Dashboard</h1>
         <p class="text-gray-600">Manage the salon queue and customer flow</p>
+        <p class="text-sm text-primary-600">Welcome, {{ authStore.currentStaff?.name }}</p>
       </div>
 
       <!-- Stats Overview -->
@@ -61,7 +62,7 @@
             <div class="flex-shrink-0">
               <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
             </div>
@@ -111,7 +112,7 @@
                   </button>
                   <button 
                     @click="removeCustomer(customer)"
-                    class="px-3 py-2 bg-red-500 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                    class="px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors"
                   >
                     Remove
                   </button>
@@ -244,9 +245,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useQueueStore } from '../stores/queue'
+import { useAuthStore } from '../stores/auth'
 import { format } from 'date-fns'
 
 const queueStore = useQueueStore()
+const authStore = useAuthStore()
 const notificationSound = ref<HTMLAudioElement>()
 
 const waitingCustomers = computed(() => 
@@ -306,9 +309,6 @@ const formatTime = (dateString?: string) => {
 const startService = async (customer: any) => {
   try {
     await queueStore.updateCustomerStatus(customer.id, 'in-progress')
-    await queueStore.fetchCustomers()
-    queueStore.customers = await queueStore.fetchCustomers() // Update the customers array
-    inProgressCustomers.value = queueStore.customers.filter(c => c.status === 'in-progress')
     playNotification()
   } catch (error) {
     console.error('Error starting service:', error)
@@ -321,11 +321,14 @@ const completeService = async (customer: any) => {
       Math.round((new Date().getTime() - new Date(customer.started_at).getTime()) / (1000 * 60)) :
       customer.estimated_wait
 
-    await queueStore.updateCustomerStatus(customer.id, 'completed')
-    await queueStore.fetchCustomers()
-    queueStore.customers = await queueStore.fetchCustomers() // Update the customers array
-    inProgressCustomers.value = queueStore.customers.filter(c => c.status === 'in-progress')
-    recentlyCompleted.value = queueStore.customers.filter(c => c.status === 'completed').sort((a, b) => new Date(b.completed_at || b.created_at).getTime() - new Date(a.completed_at || a.created_at).getTime()).slice(0, 5)
+    // Update customer with completion time and actual wait
+    const updates = {
+      status: 'completed',
+      completed_at: new Date().toISOString(),
+      actual_wait: actualWait
+    }
+
+    await queueStore.updateCustomerStatus(customer.id, 'completed', updates)
     playNotification()
   } catch (error) {
     console.error('Error completing service:', error)
@@ -393,16 +396,20 @@ const playNotification = () => {
   }
 }
 
+let refreshInterval: any
+
 onMounted(() => {
   queueStore.fetchCustomers()
   
   // Auto-refresh every 30 seconds
-  const interval = setInterval(() => {
+  refreshInterval = setInterval(() => {
     queueStore.fetchCustomers()
   }, 30000)
-  
-  onUnmounted(() => {
-    clearInterval(interval)
-  })
+})
+
+onUnmounted(() => {
+  if (refreshInterval) {
+    clearInterval(refreshInterval)
+  }
 })
 </script>

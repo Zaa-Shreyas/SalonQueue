@@ -26,67 +26,25 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Mock data for development
-const mockCustomers = [
-  {
-    id: '1',
-    name: 'John Smith',
-    phone: '+1234567890',
-    service: 'Haircut',
-    status: 'in-progress',
-    estimated_wait: 15,
-    created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString()
-  },
-  {
-    id: '2',
-    name: 'Sarah Johnson',
-    phone: '+1234567891',
-    service: 'Hair Color',
-    status: 'waiting',
-    estimated_wait: 45,
-    created_at: new Date(Date.now() - 20 * 60 * 1000).toISOString()
-  },
-  {
-    id: '3',
-    name: 'Mike Davis',
-    phone: '+1234567892',
-    service: 'Beard Trim',
-    status: 'waiting',
-    estimated_wait: 65,
-    created_at: new Date(Date.now() - 10 * 60 * 1000).toISOString()
-  }
-];
-
-let customers = [...mockCustomers];
-
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
-  // Send current queue state to new client
-  socket.emit('queueUpdate', customers);
-
   // Handle customer added
   socket.on('customerAdded', (customer) => {
-    customers.push(customer);
-    io.emit('queueUpdate', customers);
+    io.emit('queueUpdate');
     io.emit('customerUpdate', customer);
   });
 
   // Handle customer status update
   socket.on('customerUpdated', (updatedCustomer) => {
-    const index = customers.findIndex(c => c.id === updatedCustomer.id);
-    if (index !== -1) {
-      customers[index] = updatedCustomer;
-      io.emit('queueUpdate', customers);
-      io.emit('customerUpdate', updatedCustomer);
-    }
+    io.emit('queueUpdate');
+    io.emit('customerUpdate', updatedCustomer);
   });
 
   // Handle customer removal
   socket.on('customerRemoved', (customerId) => {
-    customers = customers.filter(c => c.id !== customerId);
-    io.emit('queueUpdate', customers);
+    io.emit('queueUpdate');
   });
 
   socket.on('disconnect', () => {
@@ -97,37 +55,22 @@ io.on('connection', (socket) => {
 // API Routes
 app.get('/api/customers', async (req, res) => {
   try {
-    if (supabaseUrl === 'https://placeholder.supabase.co') {
-      return res.json(customers);
-    }
-    
     const { data, error } = await supabase
       .from('customers')
       .select('*')
       .order('created_at', { ascending: true });
     
     if (error) throw error;
-    res.json(data || customers);
+    res.json(data || []);
   } catch (error) {
     console.error('Error fetching customers:', error);
-    res.json(customers); // Fallback to mock data
+    res.status(500).json({ error: 'Failed to fetch customers' });
   }
 });
 
 app.post('/api/customers', async (req, res) => {
   try {
     const customerData = req.body;
-    
-    if (supabaseUrl === 'https://placeholder.supabase.co') {
-      const newCustomer = {
-        ...customerData,
-        id: Date.now().toString(),
-        created_at: new Date().toISOString()
-      };
-      customers.push(newCustomer);
-      io.emit('customerAdded', newCustomer);
-      return res.json(newCustomer);
-    }
     
     const { data, error } = await supabase
       .from('customers')
@@ -150,16 +93,6 @@ app.put('/api/customers/:id', async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
-    if (supabaseUrl === 'https://placeholder.supabase.co') {
-      const index = customers.findIndex(c => c.id === id);
-      if (index !== -1) {
-        customers[index] = { ...customers[index], ...updates };
-        io.emit('customerUpdated', customers[index]);
-        return res.json(customers[index]);
-      }
-      return res.status(404).json({ error: 'Customer not found' });
-    }
-    
     const { data, error } = await supabase
       .from('customers')
       .update(updates)
@@ -179,19 +112,6 @@ app.put('/api/customers/:id', async (req, res) => {
 
 app.get('/api/services', async (req, res) => {
   try {
-    if (supabaseUrl === 'https://placeholder.supabase.co') {
-      const mockServices = [
-        { id: '1', name: 'Haircut', duration: 30, price: 25 },
-        { id: '2', name: 'Hair Wash & Blow Dry', duration: 45, price: 35 },
-        { id: '3', name: 'Hair Color', duration: 120, price: 80 },
-        { id: '4', name: 'Beard Trim', duration: 20, price: 15 },
-        { id: '5', name: 'Facial', duration: 60, price: 50 },
-        { id: '6', name: 'Manicure', duration: 40, price: 30 },
-        { id: '7', name: 'Pedicure', duration: 50, price: 40 }
-      ];
-      return res.json(mockServices);
-    }
-    
     const { data, error } = await supabase
       .from('services')
       .select('*')
@@ -205,45 +125,26 @@ app.get('/api/services', async (req, res) => {
   }
 });
 
-app.get('/api/analytics', async (req, res) => {
+app.get('/api/staff', async (req, res) => {
   try {
-    // Mock analytics data for development
-    const mockAnalytics = {
-      dailyCustomers: [
-        { date: '2024-01-15', customers: 45 },
-        { date: '2024-01-16', customers: 52 },
-        { date: '2024-01-17', customers: 38 },
-        { date: '2024-01-18', customers: 61 },
-        { date: '2024-01-19', customers: 48 },
-        { date: '2024-01-20', customers: 55 },
-        { date: '2024-01-21', customers: 42 }
-      ],
-      hourlyDistribution: [
-        { hour: '9 AM', customers: 5 },
-        { hour: '10 AM', customers: 12 },
-        { hour: '11 AM', customers: 18 },
-        { hour: '12 PM', customers: 15 },
-        { hour: '1 PM', customers: 8 },
-        { hour: '2 PM', customers: 14 },
-        { hour: '3 PM', customers: 20 },
-        { hour: '4 PM', customers: 16 },
-        { hour: '5 PM', customers: 11 },
-        { hour: '6 PM', customers: 19 },
-        { hour: '7 PM', customers: 13 },
-        { hour: '8 PM', customers: 7 }
-      ],
-      servicePopularity: [
-        { service: 'Haircut', count: 156, percentage: 45 },
-        { service: 'Hair Wash & Blow Dry', count: 89, percentage: 26 },
-        { service: 'Beard Trim', count: 67, percentage: 19 },
-        { service: 'Hair Color', count: 34, percentage: 10 }
-      ]
-    };
+    const { data, error } = await supabase
+      .from('staff')
+      .select('*');
     
-    res.json(mockAnalytics);
+    if (error) {
+      // Return mock staff data if Supabase fails
+      const mockStaff = [
+        { id: '1', name: 'John Manager', phone: '+1234567890', role: 'manager', created_at: new Date().toISOString() },
+        { id: '2', name: 'Sarah Staff', phone: '+1234567891', role: 'staff', created_at: new Date().toISOString() },
+        { id: '3', name: 'Mike Barber', phone: '+1234567892', role: 'staff', created_at: new Date().toISOString() }
+      ];
+      return res.json(mockStaff);
+    }
+    
+    res.json(data || []);
   } catch (error) {
-    console.error('Error fetching analytics:', error);
-    res.status(500).json({ error: 'Failed to fetch analytics' });
+    console.error('Error fetching staff:', error);
+    res.status(500).json({ error: 'Failed to fetch staff' });
   }
 });
 
@@ -252,7 +153,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Fallback route for development - redirect to frontend
+// Root route
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Salon Queue Management API Server', 
@@ -260,7 +161,7 @@ app.get('/', (req, res) => {
     endpoints: {
       customers: '/api/customers',
       services: '/api/services',
-      analytics: '/api/analytics',
+      staff: '/api/staff',
       health: '/health'
     }
   });

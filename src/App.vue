@@ -20,27 +20,46 @@
             >
               Home
             </router-link>
-            <router-link
-              to="/staff"
-              class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600 bg-accent-600': $route.name === 'StaffDashboard' }"
-            >
-              Staff
-            </router-link>
-            <router-link
-              to="/analytics"
-              class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600 bg-accent-600': $route.name === 'Analytics' }"
-            >
-              Analytics
-            </router-link>
-            <router-link
-              to="/qr"
-              class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600 bg-accent-600': $route.name === 'QRGenerator' }"
-            >
-              QR Code
-            </router-link>
+            
+            <template v-if="authStore.isAuthenticated">
+              <router-link
+                to="/staff"
+                class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                :class="{ 'text-primary-600 bg-accent-600': $route.name === 'StaffDashboard' }"
+              >
+                Staff
+              </router-link>
+              <router-link
+                to="/analytics"
+                class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                :class="{ 'text-primary-600 bg-accent-600': $route.name === 'Analytics' }"
+              >
+                Analytics
+              </router-link>
+              <router-link
+                to="/qr"
+                class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                :class="{ 'text-primary-600 bg-accent-600': $route.name === 'QRGenerator' }"
+              >
+                QR Code
+              </router-link>
+              <button
+                @click="handleLogout"
+                class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Logout ({{ authStore.currentStaff?.name }})
+              </button>
+            </template>
+            
+            <template v-else>
+              <router-link
+                to="/staff-login"
+                class="text-accent-50 hover:text-black px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                :class="{ 'text-primary-600 bg-accent-600': $route.name === 'StaffLogin' }"
+              >
+                Staff Login
+              </router-link>
+            </template>
           </div>
         </div>
       </div>
@@ -64,11 +83,21 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQueueStore } from './stores/queue'
+import { useAuthStore } from './stores/auth'
 
+const router = useRouter()
 const queueStore = useQueueStore()
+const authStore = useAuthStore()
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/')
+}
 
 onMounted(() => {
+  authStore.checkAuth()
   queueStore.initSocket()
   queueStore.fetchServices()
   queueStore.fetchCustomers()

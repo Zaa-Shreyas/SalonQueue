@@ -108,13 +108,42 @@ const form = ref({
   service: ''
 })
 
+const activeCustomers = computed(() => {
+  return queueStore.customers
+    ?.filter(c => c.status === 'waiting' || c.status === 'in-progress')
+    ?.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) || []
+})
+
 const estimatedWait = computed(() => {
   if (!form.value.service) return 0
-  const service = queueStore.services.find(s => s.name === form.value.service)
-  const baseDuration = service?.duration || 30
-  const waitingCustomers = queueStore.waitingCount
-  return baseDuration + (waitingCustomers * 15)
+
+  const selectedService = queueStore.services.find(s => s.name === form.value.service)
+  if (!selectedService) return 0
+
+  let totalTime = 0
+  const now = new Date().getTime()
+
+  for (const customer of activeCustomers.value) {
+    const service = queueStore.services.find(s => s.name === customer.service)
+    const duration = service?.duration || 15
+
+    if (customer.status === 'in-progress') {
+      const startedAt = new Date(customer.started_at || customer.created_at).getTime()
+      const elapsedMinutes = Math.floor((now - startedAt) / (1000 * 60))
+      const remaining = Math.max(0, duration - elapsedMinutes)
+      totalTime += remaining
+    } else {
+      // for 'waiting' customers, full time counts
+      totalTime += duration
+      // for 'waiting' customers, full time counts
+      totalTime += duration
+    }
+  }
+
+  return totalTime
 })
+
+
 
 const submitRegistration = async () => {
   loading.value = true

@@ -10,7 +10,10 @@ export interface Customer {
   service: string
   status: 'waiting' | 'in-progress' | 'completed'
   estimated_wait: number
+  actual_wait?: number
   created_at: string
+  started_at?: string
+  completed_at?: string
   position?: number
 }
 
@@ -41,6 +44,7 @@ export const useQueueStore = defineStore('queue', () => {
       if (index !== -1) {
         customers.value[index] = customer
       }
+      updatePositions()
     })
   }
 
@@ -82,8 +86,10 @@ export const useQueueStore = defineStore('queue', () => {
       if (error) throw error
       customers.value = data || []
       updatePositions()
+      return data || []
     } catch (error) {
       console.error('Error fetching customers:', error)
+      return []
     }
   }
 
@@ -120,6 +126,9 @@ export const useQueueStore = defineStore('queue', () => {
       // Emit update to all clients
       socket.value?.emit('customerAdded', data)
       
+      // Refresh local data
+      await fetchCustomers()
+      
       return data
     } catch (error) {
       console.error('Error adding customer:', error)
@@ -127,11 +136,24 @@ export const useQueueStore = defineStore('queue', () => {
     }
   }
 
-  const updateCustomerStatus = async (customerId: string, status: Customer['status']) => {
+  const updateCustomerStatus = async (customerId: string, status: Customer['status'], additionalUpdates?: any) => {
     try {
+      const updates: any = { status }
+      
+      if (status === 'in-progress') {
+        updates.started_at = new Date().toISOString()
+      } else if (status === 'completed') {
+        updates.completed_at = new Date().toISOString()
+      }
+      
+      // Merge any additional updates
+      if (additionalUpdates) {
+        Object.assign(updates, additionalUpdates)
+      }
+
       const { data, error } = await supabase
         .from('customers')
-        .update({ status })
+        .update(updates)
         .eq('id', customerId)
         .select()
         .single()
@@ -140,6 +162,9 @@ export const useQueueStore = defineStore('queue', () => {
       
       // Emit update to all clients
       socket.value?.emit('customerUpdated', data)
+      
+      // Refresh local data
+      await fetchCustomers()
       
       return data
     } catch (error) {

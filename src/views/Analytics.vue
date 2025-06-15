@@ -253,11 +253,10 @@ const peakHour = computed(() => {
 const servicePopularity = computed(() => analyticsData.value.servicePopularity)
 
 const recentActivity = computed(() => [
-  { type: 'completed', message: 'Sarah Johnson completed Hair Color service', time: '2 min ago' },
-  { type: 'started', message: 'Mike Davis started Beard Trim service', time: '5 min ago' },
-  { type: 'waiting', message: 'Emily Chen joined the queue', time: '12 min ago' },
-  { type: 'completed', message: 'John Smith completed Haircut service', time: '18 min ago' },
-  { type: 'started', message: 'Lisa Wang started Facial service', time: '25 min ago' }
+  { type: 'completed', message: 'Aditya completed Hair Color service', time: '1 min ago' },
+  { type: 'started', message: 'Shubh started Beard Trim service', time: '5 min ago' },
+  { type: 'waiting', message: 'Chandan joined the queue', time: '2 min ago' },
+
 ])
 
 const createDailyChart = () => {

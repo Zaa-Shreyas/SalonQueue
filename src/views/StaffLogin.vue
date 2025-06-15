@@ -58,16 +58,6 @@
           </button>
         </form>
 
-        <div class="mt-6">
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h3 class="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</h3>
-            <div class="text-xs text-gray-600 space-y-1">
-              <p><strong>Manager:</strong> John Manager, +1234567890</p>
-              <p><strong>Staff:</strong> Sarah Staff, +1234567891</p>
-              <p><strong>Barber:</strong> Mike Barber, +1234567892</p>
-            </div>
-          </div>
-        </div>
 
         <div class="mt-6 text-center">
           <router-link to="/" class="text-primary-600 hover:text-primary-700 text-sm">

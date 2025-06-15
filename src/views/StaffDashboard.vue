@@ -183,7 +183,7 @@
               <div 
                 v-for="customer in recentlyCompleted" 
                 :key="customer.id"
-                class="p-4 border border-green-200 bg-green-50 rounded-lg"
+                class="p-4 border border-green-200 bg-primary-100 rounded-lg"
               >
                 <div class="flex justify-between items-start">
                   <div>

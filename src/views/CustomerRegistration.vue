@@ -135,8 +135,6 @@ const estimatedWait = computed(() => {
     } else {
       // for 'waiting' customers, full time counts
       totalTime += duration
-      // for 'waiting' customers, full time counts
-      totalTime += duration
     }
   }
 

@@ -10,7 +10,7 @@
           </div>
           <div class="text-right">
             <div class="text-3xl font-bold text-primary-600">
-              {{ customer?.position || 0 }}
+              {{ positionInQueue }}
             </div>
             <div class="text-sm text-gray-500">Position in queue</div>
           </div>
@@ -19,7 +19,7 @@
         <div class="grid md:grid-cols-3 gap-4">
           <div class="bg-yellow-50 p-4 rounded-lg text-center">
             <div class="text-2xl font-bold text-yellow-600 mb-1">
-              {{ customer?.estimated_wait || 0 }}m
+              {{ estimatedWait || 0 }}m
             </div>
             <div class="text-sm text-gray-600">Estimated Wait</div>
           </div>
@@ -152,15 +152,15 @@ const queueCustomers = computed(() =>
   queueStore.customers.length > 0 ? queueStore.customers : mockCustomers
 )
 
-const statusProgress = computed(() => {
-  if (!customer.value) return 0
-  switch (customer.value.status) {
-    case 'waiting': return 33
-    case 'in-progress': return 66
-    case 'completed': return 100
-    default: return 0
-  }
-})
+// const statusProgress = computed(() => {
+//   if (!customer.value) return 0
+//   switch (customer.value.status) {
+//     case 'waiting': return 33
+//     case 'in-progress': return 66
+//     case 'completed': return 100
+//     default: return 0
+//   }
+// })
 
 const formatTime = (dateString?: string) => {
   if (!dateString) return '--:--'
@@ -199,4 +199,69 @@ onUnmounted(() => {
     clearInterval(refreshInterval)
   }
 })
+
+const positionInQueue = computed(() => {
+  if (!customer.value) return 0;
+  return activeCustomers.value.findIndex(c => c.id === customer.value?.id) + 1;
+})
+
+
+const activeCustomers = computed(() => {
+  return queueStore.customers
+    ?.filter(c => c.status === 'waiting' || c.status === 'in-progress')
+    ?.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) || []
+})
+
+const estimatedWait = computed(() => {
+  if (!customer.value) return 0
+
+  let totalTime = 0
+  const now = new Date().getTime()
+
+  for (const c of activeCustomers.value) {
+    if (c.id === customer.value.id) break
+
+    const service = queueStore.services.find(s => s.name === c.service)
+    const duration = service?.duration || 15
+
+    if (c.status === 'in-progress') {
+      const startedAt = new Date(c.started_at || c.created_at).getTime()
+      const elapsedMinutes = Math.floor((now - startedAt) / (1000 * 60))
+      const remaining = Math.max(0, duration - elapsedMinutes)
+      totalTime += remaining
+    } else {
+      totalTime += duration
+    }
+  }
+
+  return totalTime
+})
+
+const joinedAt = ref<number | null>(null)
+const initialEstimatedWait = ref<number | null>(null)
+
+onMounted(async () => {
+  if (customerId.value) {
+    await queueStore.getCustomerById(customerId.value)
+    joinedAt.value = new Date(customer.value?.created_at || "").getTime()
+    initialEstimatedWait.value = estimatedWait.value // Store the initial reference
+  }
+  refreshInterval = setInterval(refreshStatus, 30000)
+})
+
+
+const statusProgress = computed(() => {
+  if (!customer.value || !joinedAt.value || initialEstimatedWait.value == null) return 0;
+
+  // If queue ahead is cleared, mark as 100%
+  if (estimatedWait.value <= 0) return 100;
+
+  const now = Date.now();
+  const elapsed = (now - joinedAt.value) / (1000 * 60); // elapsed minutes
+
+  const progress = (elapsed / initialEstimatedWait.value) * 100;
+
+  return Math.min(Math.round(progress), 99); // keep it under 100 unless estimatedWait == 0
+});
+
 </script>

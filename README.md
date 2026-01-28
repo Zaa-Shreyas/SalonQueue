@@ -15,7 +15,7 @@ Analytics Dashboard: Visualize peak wait times, rush hours, and service populari
 
 Tech Stack
 
-Frontend: Vue.js 3, Vite, TypeScript, Tailwind CSS v4, DaisyUI (halloween theme)
+Frontend: Vue.js 3, Vite, TypeScript, Tailwind CSS v4, DaisyUI
 Backend: Node.js, Express.js
 Database: Supabase (PostgreSQL) with Row-Level Security (RLS)
 Notifications: OneSignal
